@@ -17,7 +17,7 @@ import (
 // p gets a char pointer to the first byte of a []byte slice
 func p(in []byte) *C.char {
 	if len(in) == 0 {
-		return (*C.char)(nil)
+		return (*C.char)(unsafe.Pointer(nil))
 	}
 	return (*C.char)(unsafe.Pointer(&in[0]))
 }
