@@ -16,6 +16,9 @@ import (
 
 // p gets a char pointer to the first byte of a []byte slice
 func p(in []byte) *C.char {
+	if len(in) == 0 {
+		return (*C.char)(nil)
+	}
 	return (*C.char)(unsafe.Pointer(&in[0]))
 }
 
@@ -39,10 +42,10 @@ func Uncompress(in []byte, out []byte) (err error) {
 // CompressBound calculates the size of the output buffer needed by
 // Compress. This is based on the following macro:
 //
-// #define LZ4_COMPRESSBOUND(isize) 
+// #define LZ4_COMPRESSBOUND(isize)
 //      ((unsigned int)(isize) > (unsigned int)LZ4_MAX_INPUT_SIZE ? 0 : (isize) + ((isize)/255) + 16)
 func CompressBound(in []byte) int {
-	return len(in) + ((len(in)/255) + 16)
+	return len(in) + ((len(in) / 255) + 16)
 }
 
 // Compress compresses in and puts the content in out. len(out)
