@@ -1,4 +1,4 @@
-GCFLAGS := -B
+GCFLAGS := 
 LDFLAGS :=
 
 .PHONY: install
