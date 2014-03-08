@@ -33,7 +33,7 @@ func Uncompress(in []byte, out []byte) (err error) {
 	read := int(C.LZ4_uncompress(p(in), p(out), clen(out)))
 
 	if read != len(in) {
-		err = fmt.Errorf("Uncompress read %d bytes should have read %d",
+		err = fmt.Errorf("uncompress read %d bytes should have read %d",
 			read, len(in))
 	}
 	return
@@ -54,7 +54,7 @@ func CompressBound(in []byte) int {
 func Compress(in []byte, out []byte) (outSize int, err error) {
 	outSize = int(C.LZ4_compress_limitedOutput(p(in), p(out), clen(in), clen(out)))
 	if outSize == 0 {
-		err = fmt.Errorf("Insufficient space for compression")
+		err = fmt.Errorf("insufficient space for compression")
 	}
 	return
 }
