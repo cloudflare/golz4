@@ -1,7 +1,3 @@
-// Package lz4 implements compression using lz4.c
-//
-// Copyright (c) 2013 CloudFlare, Inc.
-
 package lz4
 
 // #cgo CFLAGS: -O3
@@ -17,7 +13,7 @@ import (
 // p gets a char pointer to the first byte of a []byte slice
 func p(in []byte) *C.char {
 	if len(in) == 0 {
-		return (*C.char)(nil)
+		return (*C.char)(unsafe.Pointer(nil))
 	}
 	return (*C.char)(unsafe.Pointer(&in[0]))
 }
@@ -28,12 +24,12 @@ func clen(s []byte) C.int {
 }
 
 // Uncompress with a known output size. len(out) should be equal to
-// the length of the uncompressed outout.
-func Uncompress(in []byte, out []byte) (err error) {
+// the length of the uncompressed out.
+func Uncompress(in, out []byte) (err error) {
 	read := int(C.LZ4_uncompress(p(in), p(out), clen(out)))
 
 	if read != len(in) {
-		err = fmt.Errorf("Uncompress read %d bytes should have read %d",
+		err = fmt.Errorf("uncompress read %d bytes should have read %d",
 			read, len(in))
 	}
 	return
@@ -51,10 +47,10 @@ func CompressBound(in []byte) int {
 // Compress compresses in and puts the content in out. len(out)
 // should have enough space for the compressed data (use CompressBound
 // to calculate). Returns the number of bytes in the out slice.
-func Compress(in []byte, out []byte) (outSize int, err error) {
+func Compress(in, out []byte) (outSize int, err error) {
 	outSize = int(C.LZ4_compress_limitedOutput(p(in), p(out), clen(in), clen(out)))
 	if outSize == 0 {
-		err = fmt.Errorf("Insufficient space for compression")
+		err = fmt.Errorf("insufficient space for compression")
 	}
 	return
 }
