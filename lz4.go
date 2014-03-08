@@ -1,7 +1,3 @@
-// Package lz4 implements compression using lz4.c and lz4hc.c
-//
-// Copyright (c) 2013 CloudFlare, Inc.
-
 package lz4
 
 // #cgo CFLAGS: -O3
@@ -29,7 +25,7 @@ func clen(s []byte) C.int {
 
 // Uncompress with a known output size. len(out) should be equal to
 // the length of the uncompressed out.
-func Uncompress(in []byte, out []byte) (err error) {
+func Uncompress(in, out []byte) (err error) {
 	read := int(C.LZ4_uncompress(p(in), p(out), clen(out)))
 
 	if read != len(in) {
