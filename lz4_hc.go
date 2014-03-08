@@ -23,7 +23,7 @@ func CompressHC(in, out []byte) (int, error) {
 // (use CompressBound to calculate). Returns the number of bytes in the out
 // slice. To automatically choose the compression level, use 0. Otherwise, use
 // any value in the inclusive range 1 (worst) through 16 (best). Most
-//applications will prefer CompressHC.
+// applications will prefer CompressHC.
 func CompressHCLevel(in, out []byte, level int) (outSize int, err error) {
 	// LZ4HC does not handle empty buffers. Pass through to Compress.
 	if len(in) == 0 || len(out) == 0 {
