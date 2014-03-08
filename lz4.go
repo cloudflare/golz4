@@ -47,7 +47,7 @@ func CompressBound(in []byte) int {
 // Compress compresses in and puts the content in out. len(out)
 // should have enough space for the compressed data (use CompressBound
 // to calculate). Returns the number of bytes in the out slice.
-func Compress(in []byte, out []byte) (outSize int, err error) {
+func Compress(in, out []byte) (outSize int, err error) {
 	outSize = int(C.LZ4_compress_limitedOutput(p(in), p(out), clen(in), clen(out)))
 	if outSize == 0 {
 		err = fmt.Errorf("insufficient space for compression")
