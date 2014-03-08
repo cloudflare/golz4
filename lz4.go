@@ -28,7 +28,7 @@ func clen(s []byte) C.int {
 }
 
 // Uncompress with a known output size. len(out) should be equal to
-// the length of the uncompressed outout.
+// the length of the uncompressed out.
 func Uncompress(in []byte, out []byte) (err error) {
 	read := int(C.LZ4_uncompress(p(in), p(out), clen(out)))
 
