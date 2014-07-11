@@ -6,6 +6,7 @@ package lz4
 import "C"
 
 import (
+	"errors"
 	"fmt"
 	"unsafe"
 )
@@ -25,14 +26,12 @@ func clen(s []byte) C.int {
 
 // Uncompress with a known output size. len(out) should be equal to
 // the length of the uncompressed out.
-func Uncompress(in, out []byte) (err error) {
-	read := int(C.LZ4_uncompress(p(in), p(out), clen(out)))
-
-	if read != len(in) {
-		err = fmt.Errorf("uncompress read %d bytes should have read %d",
-			read, len(in))
+func Uncompress(in, out []byte) (error) {
+	if int(C.LZ4_decompress_safe(p(in), p(out), clen(in), clen(out))) < 0 {
+		return errors.New("Malformed compression stream")
 	}
-	return
+
+	return nil
 }
 
 // CompressBound calculates the size of the output buffer needed by
