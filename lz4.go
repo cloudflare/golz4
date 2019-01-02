@@ -26,12 +26,13 @@ func clen(s []byte) C.int {
 
 // Uncompress with a known output size. len(out) should be equal to
 // the length of the uncompressed out.
-func Uncompress(in, out []byte) (error) {
-	if int(C.LZ4_decompress_safe(p(in), p(out), clen(in), clen(out))) < 0 {
-		return errors.New("Malformed compression stream")
+func Uncompress(in, out []byte) (int, error) {
+	uncompressedLength := int(C.LZ4_decompress_safe(p(in), p(out), clen(in), clen(out)))
+	if uncompressedLength < 0 {
+		return 0, errors.New("Malformed compression stream")
 	}
 
-	return nil
+	return uncompressedLength, nil
 }
 
 // CompressBound calculates the size of the output buffer needed by
