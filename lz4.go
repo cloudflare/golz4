@@ -1,6 +1,7 @@
 package lz4
 
 // #cgo CFLAGS: -O3
+// #define LZ4_DISABLE_DEPRECATE_WARNINGS
 // #include "src/lz4.h"
 // #include "src/lz4.c"
 import "C"
