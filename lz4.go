@@ -1,6 +1,7 @@
 package lz4
 
 // #cgo CFLAGS: -O3
+// #define LZ4_DISABLE_DEPRECATE_WARNINGS
 // #include "src/lz4.h"
 // #include "src/lz4.c"
 import "C"
@@ -26,12 +27,13 @@ func clen(s []byte) C.int {
 
 // Uncompress with a known output size. len(out) should be equal to
 // the length of the uncompressed out.
-func Uncompress(in, out []byte) (error) {
-	if int(C.LZ4_decompress_safe(p(in), p(out), clen(in), clen(out))) < 0 {
-		return errors.New("Malformed compression stream")
+func Uncompress(in, out []byte) (int, error) {
+	uncompressedLength := int(C.LZ4_decompress_safe(p(in), p(out), clen(in), clen(out)))
+	if uncompressedLength < 0 {
+		return 0, errors.New("Malformed compression stream")
 	}
 
-	return nil
+	return uncompressedLength, nil
 }
 
 // CompressBound calculates the size of the output buffer needed by
@@ -47,7 +49,7 @@ func CompressBound(in []byte) int {
 // should have enough space for the compressed data (use CompressBound
 // to calculate). Returns the number of bytes in the out slice.
 func Compress(in, out []byte) (outSize int, err error) {
-	outSize = int(C.LZ4_compress_limitedOutput(p(in), p(out), clen(in), clen(out)))
+	outSize = int(C.LZ4_compress_default(p(in), p(out), clen(in), clen(out)))
 	if outSize == 0 {
 		err = fmt.Errorf("insufficient space for compression")
 	}
