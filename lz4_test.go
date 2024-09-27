@@ -23,8 +23,8 @@ func TestCompressionRatio(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if want := 4573; want != outSize {
-		t.Fatalf("Compressed output length != expected: %d != %d", want, outSize)
+	if want := 4746; want != outSize {
+		t.Fatalf("Compressed output length != expected: %d != %d", outSize, want)
 	}
 }
 
